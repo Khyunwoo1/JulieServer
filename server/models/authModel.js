@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const { WEBDB_PROD_URI, PG_TEST_URI } = require('../settings');
+const { USER_PROD_URI, PG_TEST_URI } = require('../settings');
 
 let activeURI;
 // this when you run it as dev mode vs test mode
@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === 'test') {
   console.log('***Using the testing database***');
   activeURI = PG_TEST_URI;
 } else {
-  activeURI = WEBDB_PROD_URI;
+  activeURI = USER_PROD_URI;
 }
 
 
