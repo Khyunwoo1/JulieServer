@@ -1,9 +1,9 @@
 const db = require('../models/julieModel.js');
 
-const pgController = {};
+const rankingsControllers = {};
 
 // Copied over from stay on track
-pgController.addUser = async (req, res, next) => {
+rankingsControllers.addUser = async (req, res, next) => {
   // creating the encrypted version of the password received from client
   const hash = bcrypt.hashSync(req.body.password, SALT_WORK_FACTOR);
 
@@ -37,7 +37,7 @@ pgController.addUser = async (req, res, next) => {
     return next();
   } catch(err) {
     return next({
-      log: `ERROR in pgController.addUser: ${err}`,
+      log: `ERROR in rankingsControllers.addUser: ${err}`,
       message: { err: 'An error occurred while trying to add a user to the database'}
     });
   }
@@ -45,7 +45,7 @@ pgController.addUser = async (req, res, next) => {
 
 
 // I made some changes on this, should check original to make sure query is correct
-pgController.findSomething = async (req, res, next) => {
+rankingsControllers.findSomething = async (req, res, next) => {
   const addEngagementQuery = 'SELECT *';
   
   // in the query, notes cannot be undefined. A value or null has to be passed in
@@ -76,10 +76,10 @@ pgController.findSomething = async (req, res, next) => {
     return next();
   } catch(err) {
     return next({
-      log: `ERROR in pgController.addEngagement: ${err}`,
+      log: `ERROR in rankingsControllers.addEngagement: ${err}`,
       message: { err: 'An error occurred while trying to add an engagement to the database'}
     });
   }
 };
 
-module.exports = pgController;
+module.exports = rankingsControllers;

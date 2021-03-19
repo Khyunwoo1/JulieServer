@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const pgController = require('./controllers/pgControllers');
+const rankingsControllers = require('../controllers/rankingsControllers');
 
 
 router.get('/', 
-  pgController.findSomething,
+  rankingsControllers.findSomething,
   (req, res) => {
     res.status(200).json({})
   }
