@@ -6,13 +6,16 @@ router.post('/',
   rankingsControllers.checkDomain,
   (req, res) => {
     const { rankings } = res.locals;
+    console.log(res.locals.rankings)
     return res.status(200).json(rankings);
   }
 )
 
-// router.get('/', 
+// router.post('/', 
+//   rankingsControllers.addDomain,
 //   (req, res) => {
-//     res.status(200).json({})
+//     const { rankings } = res.locals;
+//     return res.status(200).json(rankings);
 //   }
 // )
 
@@ -21,6 +24,6 @@ router.post('/',
 //     res.status(200).json({})
 //   }
 // )
-
+ 
 
 module.exports = router;
