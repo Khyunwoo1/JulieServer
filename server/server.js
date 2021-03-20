@@ -1,7 +1,8 @@
 const express = require('express');
+const path = require('path');
 const app = express();
-const userRouter = require(path.join(__dirname, 'routers', 'users.js'));
-const rankingsRouter = require(path.join(__dirname, 'routers', 'rankings.js'));
+// const userRouter = require(path.join(__dirname, 'routers', 'users.js'));
+const rankingsRouter = require('./routers/rankings.js');
 const PORT = 3333;
 
 
@@ -18,9 +19,8 @@ app.use((req, res, next) =>{
   return next();
 });
 
-app.use('/user', userRouter);
-app.use('/rankings', rankingsRouter);
-
+// app.use('/user', userRouter);
+app.use('/rankings', rankingsRouter); 
 
 // Catch All
 app.use('*', (res, req) => {
