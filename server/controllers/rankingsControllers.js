@@ -28,6 +28,11 @@ rankingsControllers.checkDomain = async (req, res, next) => {
   }
 }; 
 
+rankingsControllers.addDomain = async (req, res, next) => {
+  console.log('new req.body ',req.body)
+}
+
+
 // rankingsControllers.addDomain = async (req, res, next) => {
  
 //   // in the query, domainName cannot be undefined. A value or null has to be passed in

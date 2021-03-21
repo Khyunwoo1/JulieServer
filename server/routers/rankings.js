@@ -11,13 +11,12 @@ router.post('/',
   }
 )
 
-// router.post('/', 
-//   rankingsControllers.addDomain,
-//   (req, res) => {
-//     const { rankings } = res.locals;
-//     return res.status(200).json(rankings);
-//   }
-// )
+router.post('/new', 
+  rankingsControllers.addDomain,
+  (req, res) => {
+    return res.status(200).json({}); 
+  }
+)
 
 // router.delete('/', 
 //   (req, res) => {
