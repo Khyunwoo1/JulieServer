@@ -4,6 +4,7 @@ const rankingsControllers = {};
 
 rankingsControllers.checkDomain = async (req, res, next) => {
  
+  console.log('req body check', req.body.domainName)
   // In the query, domainName cannot be undefined. A value or null has to be passed in
   let domainName;
   if (req.body.domainName === undefined) domainName = null;
@@ -29,7 +30,7 @@ rankingsControllers.checkDomain = async (req, res, next) => {
 }; 
 
 rankingsControllers.addDomain = async (req, res, next) => {
-  console.log('new req.body ',req.body)
+  console.log('new req.body ',req.body.newElements)
 }
 
 
