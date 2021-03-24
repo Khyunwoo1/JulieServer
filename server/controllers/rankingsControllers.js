@@ -12,14 +12,19 @@ rankingsControllers.checkDomain = async (req, res, next) => {
 
   const websiteCheckQuery = 'SELECT * FROM all_websites WHERE domain_name = ' + "'" + domainName + "'";
 
-  // Test query works
-  const testQuery = "SELECT * FROM all_websites WHERE domain_name = 'dominos.com'";
+
 
   try {
     const response = await db.query(websiteCheckQuery);
+    if(response){
+      // if on all websites, send back rankings from that particular table
+      const webpageRankingQuery = `SELECT * FROM "${domainName}"`;
+      const webpageRankingResponse = await db.query(webpageRankingQuery);
+      res.locals.rankings = webpageRankingResponse.rows;
+      return next();
+    }
 
-    res.locals.rankings = response.rows;
-    return next();
+
 
   } catch(err) { 
     return next({
@@ -33,13 +38,16 @@ rankingsControllers.addDomain = async (req, res, next) => {
   console.log('new req.body ',req.body.newElements)
 }
 
-
+rankingsControllers.userInput = async (req, res, next) => {
+  console.log('user input in req.body ',req.body.userInput) 
+}
+ 
 // rankingsControllers.addDomain = async (req, res, next) => {
  
 //   // in the query, domainName cannot be undefined. A value or null has to be passed in
 //   let domainName;
 //   if (req.body.domainName === undefined) domainName = null;
-//   else domainName = req.body.domainName;
+//   else domainName = req.body.domainName; 
 
 //   const websiteCheckQuery = 'SELECT * FROM all_websites WHERE domain_name = ' + domainName;
 
@@ -57,7 +65,7 @@ rankingsControllers.addDomain = async (req, res, next) => {
 //       THIS IS WHERE THE BROWSER DOM TRAVERSING SHIT IS USEFUL
 
 
-//      AND ALSO
+//      AND ALSO 
 
 //      SEPARATE OUT THE INSERT STUFF IN CASE DOMAIN DOESNT EXIST IN ALL WEBSITES
 //      */

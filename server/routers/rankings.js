@@ -6,7 +6,7 @@ router.post('/',
   rankingsControllers.checkDomain,
   (req, res) => {
     const { rankings } = res.locals;
-    console.log(res.locals.rankings)
+    console.log('AHHHHHHHHHHHHHH', res.locals.rankings)
     return res.status(200).json(rankings);
   }
 )
@@ -17,6 +17,14 @@ router.post('/new',
     return res.status(200).json({}); 
   }
 )
+
+router.post('/edit/', 
+  rankingsControllers.userInput,
+  (req, res) => {
+    return res.status(200).json({});
+  }
+)
+
 
 // router.delete('/', 
 //   (req, res) => {
