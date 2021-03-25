@@ -12,8 +12,6 @@ rankingsControllers.checkDomain = async (req, res, next) => {
 
   const websiteCheckQuery = 'SELECT * FROM all_websites WHERE domain_name = ' + "'" + domainName + "'";
 
-
-
   try {
     const response = await db.query(websiteCheckQuery);
     if(response){
@@ -24,8 +22,6 @@ rankingsControllers.checkDomain = async (req, res, next) => {
       return next();
     }
 
-
-
   } catch(err) { 
     return next({
       log: `ERROR in rankingsControllers.addEngagement: ${err}`,
@@ -34,14 +30,126 @@ rankingsControllers.checkDomain = async (req, res, next) => {
   }
 }; 
 
+
 rankingsControllers.addDomain = async (req, res, next) => {
   console.log('new req.body ',req.body.newElements)
   res.locals.algoRankings = {hi: 'yo'};
   return next();
 }
 
+const voteCacheObj = {};
 rankingsControllers.userInput = async (req, res, next) => {
-  console.log('user input in req.body ',req.body.userInput) 
+
+  const { currentUrl, voteType } = req.body;
+  const lastTableRankings = {};
+  const updatedRankings = {};
+
+
+
+
+  // Fetch and cache most current ranking
+  const currentDomainQuery = 'SELECT * FROM "' + currentUrl +'" LIMIT 100';
+  
+  try {
+    const response = await db.query(currentDomainQuery);
+    console.log('query for current table ', response.rows)
+    // response.rows is an array with each row as its own obj
+    // loop through response.rows and populate lastTableRankings
+    if(response){
+      response.rows.forEach(row =>{
+        lastTableRankings[row.name] = [row.ranking, row.dom_element];
+      })
+      // we also need NAME 
+      // Populate voteCacheObj with upcoming votes 
+
+      console.log('LAST TABLE RANKINGS', lastTableRankings);
+
+      
+
+
+      console.log('this is vote cache obj', voteCacheObj);
+    }
+
+    return next();
+  } catch(err) { 
+    return next({
+      log: `ERROR in rankingsControllers.userInput: ${err}`,
+      message: { err: 'An error occurred while trying to add an engagement to the database'}
+    });
+  }
+
+  /**
+    Adding and removing is easy enough for now
+
+    How to handling voting?
+    - Will ultimately rely on something like Redis
+    
+    But for quick and dirty for now, probably a set time interval of checking if # of votes 
+    are at least > than a certain amount and then batch injecting
+
+      I'D REMOVE THE RANKING COL COMPLETELY
+      JUST DO BY VOTING SYSTEM WHERE TABLES ORGANIZED BY MOST UPVOTED AT TOP 
+
+      - would have to fetch the current table
+      - cache it somewhere as "last time table rankings"
+      - say that last table was:
+      Id  Dom Element   Name              Votes
+      1   button        search button     20
+      2   button        get coupon        19
+      3   a             order online      18
+      4   button        track order       14
+
+      THIS SHOULD BE BATCHED, YOU DONT WANT THIS INFO REAL TIME
+
+      const lastTableRankings = {
+        search button: [20, button],
+        get coupon: [19, button],
+        order online: [18, a],
+        button: [14, button],
+      };
+
+      const voteCacheObj = {
+        search button: 20
+        get coupon: 19
+        order online: 18,
+        button: 14
+      };
+
+      Every time a vote comes in:
+      - if req.body should be: 
+      {
+        name: 1
+      }
+      
+      or 
+
+      {
+        name: -1
+      }
+
+      Check voteCacheObj to match key to name
+      - if upvote, ++
+      - if downvote, --
+
+      const updatedRankings = {};
+
+      After set interval time, loop through lastTableRankings
+      - at each key
+        let rankNum = lastTableRankings[key][0];
+        const domType = lastTableRankings[key][1];
+
+        // updated rank num
+        let rankNum += voteCacheObj[key];
+
+        // put into updated Rankings
+        updatedRankings[rankNum] = [key, domType]
+
+      Loop through updatedRankings and create query
+
+   */
+  
+  res.locals.userInputResponse = {yo: 'yoooo'}
+  return next();
 }
  
 // rankingsControllers.addDomain = async (req, res, next) => {
