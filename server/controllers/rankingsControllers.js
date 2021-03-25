@@ -36,6 +36,8 @@ rankingsControllers.checkDomain = async (req, res, next) => {
 
 rankingsControllers.addDomain = async (req, res, next) => {
   console.log('new req.body ',req.body.newElements)
+  res.locals.algoRankings = {hi: 'yo'};
+  return next();
 }
 
 rankingsControllers.userInput = async (req, res, next) => {

@@ -14,7 +14,8 @@ router.post('/',
 router.post('/new', 
   rankingsControllers.addDomain,
   (req, res) => {
-    return res.status(200).json({}); 
+    console.log(res.locals.algoRankings);
+    return res.status(200).json(res.locals.algoRankings); 
   }
 )
 
