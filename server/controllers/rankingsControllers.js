@@ -44,9 +44,6 @@ rankingsControllers.userInput = async (req, res, next) => {
   const lastTableRankings = {};
   const updatedRankings = {};
 
-
-
-
   // Fetch and cache most current ranking
   const currentDomainQuery = 'SELECT * FROM "' + currentUrl +'" LIMIT 100';
   
@@ -70,6 +67,7 @@ rankingsControllers.userInput = async (req, res, next) => {
       console.log('this is vote cache obj', voteCacheObj);
     }
 
+    res.locals.userInputResponse = {yo: 'yoooo'}
     return next();
   } catch(err) { 
     return next({
@@ -148,8 +146,7 @@ rankingsControllers.userInput = async (req, res, next) => {
 
    */
   
-  res.locals.userInputResponse = {yo: 'yoooo'}
-  return next();
+
 }
  
 // rankingsControllers.addDomain = async (req, res, next) => {
