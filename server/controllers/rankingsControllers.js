@@ -3,7 +3,7 @@ const db = require('../models/julieModel.js');
 const rankingsControllers = {};
 
 rankingsControllers.checkDomain = async (req, res, next) => {
- 
+  //! should really be getting full url and determining proper endpoint here
   console.log('req body check', req.body.domainName)
   // In the query, domainName cannot be undefined. A value or null has to be passed in
   let domainName;
@@ -18,22 +18,51 @@ rankingsControllers.checkDomain = async (req, res, next) => {
       // if on all websites, send back rankings from that particular table
       const webpageRankingQuery = `SELECT * FROM "${domainName}"`;
       const webpageRankingResponse = await db.query(webpageRankingQuery);
+      console.log('check this', webpageRankingResponse.rows)
+
+      // THIS WOULD BE TRIGGERED IF USERS HAVE VISITED A SITE BEFORE WITH NO ONE PREVIOUSLY CONTRIBUTING
+      if(webpageRankingResponse.rows.length === 0){
+        console.log('no rows here')
+        // at this point, should be 
+      }
       res.locals.rankings = webpageRankingResponse.rows;
+
       return next();
-    }
+    } 
 
   } catch(err) { 
+    // DELETE FROM all_websites WHERE domain_name='Alfreds Futterkiste';
+    // DROP TABLE Shippers;
+    const insertNewDomain = `INSERT INTO all_websites VALUES ('${domainName}')`;
+    await db.query(insertNewDomain);
+    // then creating its own table
+    const createNewDomainTable = `CREATE TABLE ${domainName} (
+      ranking INTEGER, 
+      dom_element VARCHAR,
+      name VARCHAR
+    );
+    `
+    await db.query(createNewDomainTable);
+
+    // should here be doing some algo here and sending to the front end an object of list of things that might be on the DOM
     return next({
-      log: `ERROR in rankingsControllers.addEngagement: ${err}`,
+      log: `ERROR in rankingsControllers.checkDomain: ${err}`,
       message: { err: 'An error occurred while trying to add an engagement to the database'}
     });
   }
 }; 
 
 
-rankingsControllers.addDomain = async (req, res, next) => {
+rankingsControllers.updateTable = async (req, res, next) => {
+
+  // here we get the confirmation of existing doms on the front end
+  // confirmed el's should just be announced on the front end, not needing to
+  // be connected to this part
+  // gets added to the table of the particular endpoint
   console.log('new req.body ',req.body.newElements)
-  res.locals.algoRankings = {hi: 'yo'};
+
+  const { newElements } = req.body
+  res.locals.algoRankings = newElements;
   return next();
 }
 
@@ -191,7 +220,6 @@ rankingsControllers.userInput = async (req, res, next) => {
 
 //     // CREATE new table for domain root
 //     const createNewDomainTable = `CREATE TABLE ${domainName} (
-//       _id INTEGER PRIMARY KEY, 
 //       ranking INTEGER, 
 //       dom_element VARCHAR,
 //       name VARCHAR
